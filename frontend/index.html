@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Handwriting Detection</title>
+</head>
+<body>
+    <h1>Upload Image for Prediction</h1>
+    <form id="upload-form">
+        <input type="file" id="file-input" accept="image/*" />
+        <button type="submit">Upload</button>
+    </form>
+    <h2 id="result"></h2>
+    <script>
+        document.getElementById('upload-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            let fileInput = document.getElementById('file-input');
+            let file = fileInput.files[0];
+            let formData = new FormData();
+            formData.append('file', file);
+
+            fetch('http://127.0.0.1:5000/predict', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').innerText = `Prediction: ${data.prediction}`;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
